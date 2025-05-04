@@ -36,6 +36,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        initAuth()
+        initPermissions()
+        initUI()
+    }
+
+
+    private fun initAuth() {
         authManager.signInAnonymously { success, uid ->
             if (success) {
                 Log.d("MainActivity", "Signed in as: $uid")
@@ -43,11 +50,14 @@ class MainActivity : ComponentActivity() {
                 Log.e("MainActivity", "Authentication failed")
             }
         }
+    }
 
-        // Inyectado y con launcher registrado
+    private fun initPermissions() {
         permissionManager.registerLauncher(requestPermissionLauncher)
         permissionManager.requestNotificationPermission(this)
+    }
 
+    private fun initUI() {
         setContent {
             val navController = rememberNavController()
 
@@ -56,7 +66,6 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "conversationsList"
                 ) {
-
                     composable("conversationsList") {
                         ConversationsListScreen(
                             ConversationsListViewModel(conversationsRepository),
@@ -83,4 +92,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }
