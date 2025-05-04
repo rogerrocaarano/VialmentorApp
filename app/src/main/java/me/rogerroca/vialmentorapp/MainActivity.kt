@@ -1,6 +1,7 @@
 package me.rogerroca.vialmentorapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import me.rogerroca.vialmentorapp.data.local.room.AppDb
 import me.rogerroca.vialmentorapp.data.local.room.LocalConversationRepository
 import me.rogerroca.vialmentorapp.data.local.room.LocalMessageRepository
@@ -24,20 +26,38 @@ import me.rogerroca.vialmentorapp.viewmodel.ConversationViewModel
 import me.rogerroca.vialmentorapp.viewmodel.ConversationsListViewModel
 
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
     private lateinit var permissionManager: PermissionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
+        signInAnonymously()
+
         permissionManager = PermissionManager(this)
         permissionManager.requestPermission()
 
         setContent {
             var showDialog by remember { mutableStateOf(false) }
-            // This is a Composable function. The contents of setContent are composable functions
             MyScreenContent(this)
         }
+    }
+
+    private fun signInAnonymously() {
+        auth.signInAnonymously()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign-in success
+                    val user = auth.currentUser
+                    Log.d("MainActivity", "Signed in as: ${user?.uid}")
+                } else {
+                    // Sign-in failed
+                    Log.e("MainActivity", "Authentication failed", task.exception)
+                }
+            }
     }
 
     @Composable
