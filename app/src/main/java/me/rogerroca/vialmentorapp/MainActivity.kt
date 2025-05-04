@@ -12,19 +12,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import me.rogerroca.vialmentorapp.data.remote.firebase.AuthManager
-import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
-import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 import me.rogerroca.vialmentorapp.ui.screen.ConversationScreen
 import me.rogerroca.vialmentorapp.ui.screen.ConversationsListScreen
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme
 import me.rogerroca.vialmentorapp.util.PermissionManager
-import me.rogerroca.vialmentorapp.viewmodel.ConversationViewModel
-import me.rogerroca.vialmentorapp.viewmodel.ConversationsListViewModel
 import org.koin.android.ext.android.inject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
-    private val conversationsRepository by inject<ConversationsRepository>()
-    private val messagesRepository by inject<MessagesRepository>()
     private val authManager by inject<AuthManager>()
     private val permissionManager by inject<PermissionManager>()
     private val requestPermissionLauncher =
@@ -68,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("conversationsList") {
                         ConversationsListScreen(
-                            ConversationsListViewModel(conversationsRepository),
+                            viewModel = koinViewModel(),
                             navController = navController,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -77,14 +73,9 @@ class MainActivity : ComponentActivity() {
                     composable("conversation/{conversationId}") { backStackEntry ->
                         val conversationId =
                             backStackEntry.arguments?.getString("conversationId")?.toInt()
-                        require(conversationId is Int)
+                        requireNotNull(conversationId) { "conversationId should not be null" }
                         ConversationScreen(
-                            ConversationViewModel(
-                                messagesRepository,
-                                conversationsRepository,
-                                conversationId
-                            ),
-                            conversationId = conversationId,
+                            viewModel = koinViewModel { parametersOf(conversationId) }, // Pasamos directamente el ViewModel
                             modifier = Modifier.fillMaxSize()
                         )
                     }

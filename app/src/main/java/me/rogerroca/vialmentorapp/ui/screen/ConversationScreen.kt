@@ -9,8 +9,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import me.rogerroca.vialmentorapp.ui.component.AssistantChatMessage
 import me.rogerroca.vialmentorapp.model.entity.MessageType
+import me.rogerroca.vialmentorapp.ui.component.AssistantChatMessage
 import me.rogerroca.vialmentorapp.ui.component.ChatInput
 import me.rogerroca.vialmentorapp.ui.component.UserChatMessage
 import me.rogerroca.vialmentorapp.viewmodel.ConversationViewModel
@@ -20,7 +20,6 @@ const val CHAT_INPUT_PLACEHOLDER = "Haga una consulta aquí..."
 @Composable
 fun ConversationScreen(
     viewModel: ConversationViewModel,
-    conversationId: Int?,
     modifier: Modifier
 ) {
     val messages by viewModel.messages.collectAsState()
@@ -48,6 +47,4 @@ fun ConversationScreen(
             }
         }
     }
-
-
 }
