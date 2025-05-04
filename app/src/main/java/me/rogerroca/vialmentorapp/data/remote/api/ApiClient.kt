@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.api
+package me.rogerroca.vialmentorapp.data.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -11,8 +11,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import me.rogerroca.vialmentorapp.data.api.dto.AgentAskQuestionRequest
-import me.rogerroca.vialmentorapp.data.api.dto.AgentAskQuestionResponse
+import me.rogerroca.vialmentorapp.data.remote.api.dto.AgentAskQuestionRequest
+import me.rogerroca.vialmentorapp.data.remote.api.dto.AgentAskQuestionResponse
 
 
 class ApiClient {

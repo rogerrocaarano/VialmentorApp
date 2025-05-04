@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.rogerroca.vialmentorapp.data.room.AppDb
-import me.rogerroca.vialmentorapp.data.room.LocalConversationRepository
-import me.rogerroca.vialmentorapp.data.room.LocalMessageRepository
+import me.rogerroca.vialmentorapp.data.local.room.AppDb
+import me.rogerroca.vialmentorapp.data.local.room.LocalConversationRepository
+import me.rogerroca.vialmentorapp.data.local.room.LocalMessageRepository
 import me.rogerroca.vialmentorapp.ui.screen.ConversationScreen
 import me.rogerroca.vialmentorapp.ui.screen.ConversationsListScreen
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme

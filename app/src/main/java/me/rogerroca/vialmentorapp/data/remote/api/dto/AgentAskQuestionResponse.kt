@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.api.dto
+package me.rogerroca.vialmentorapp.data.remote.api.dto
 
 import kotlinx.serialization.Serializable
 

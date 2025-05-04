@@ -1,11 +1,11 @@
-package me.rogerroca.vialmentorapp.data.room.dao
+package me.rogerroca.vialmentorapp.data.local.room.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import me.rogerroca.vialmentorapp.data.room.entity.MessageEntity
+import me.rogerroca.vialmentorapp.data.local.room.entity.MessageEntity
 
 @Dao
 interface MessageDao {

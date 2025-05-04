@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.room.entity
+package me.rogerroca.vialmentorapp.data.local.room.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

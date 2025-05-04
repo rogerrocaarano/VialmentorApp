@@ -1,14 +1,14 @@
-package me.rogerroca.vialmentorapp.data.room
+package me.rogerroca.vialmentorapp.data.local.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import me.rogerroca.vialmentorapp.data.room.dao.ConversationDao
-import me.rogerroca.vialmentorapp.data.room.dao.MessageDao
-import me.rogerroca.vialmentorapp.data.room.entity.ConversationEntity
-import me.rogerroca.vialmentorapp.data.room.entity.MessageEntity
+import me.rogerroca.vialmentorapp.data.local.room.dao.ConversationDao
+import me.rogerroca.vialmentorapp.data.local.room.dao.MessageDao
+import me.rogerroca.vialmentorapp.data.local.room.entity.ConversationEntity
+import me.rogerroca.vialmentorapp.data.local.room.entity.MessageEntity
 
 @Database(entities = [MessageEntity::class, ConversationEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)

@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.room
+package me.rogerroca.vialmentorapp.data.local.room
 
 import androidx.room.TypeConverter
 import java.time.Instant

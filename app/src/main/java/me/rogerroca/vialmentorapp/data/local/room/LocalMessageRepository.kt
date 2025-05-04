@@ -1,7 +1,7 @@
-package me.rogerroca.vialmentorapp.data.room
+package me.rogerroca.vialmentorapp.data.local.room
 
-import me.rogerroca.vialmentorapp.data.room.dao.MessageDao
-import me.rogerroca.vialmentorapp.data.room.entity.MessageEntity
+import me.rogerroca.vialmentorapp.data.local.room.dao.MessageDao
+import me.rogerroca.vialmentorapp.data.local.room.entity.MessageEntity
 import me.rogerroca.vialmentorapp.model.entity.Identifier
 import me.rogerroca.vialmentorapp.model.entity.Message
 import me.rogerroca.vialmentorapp.model.entity.MessageState

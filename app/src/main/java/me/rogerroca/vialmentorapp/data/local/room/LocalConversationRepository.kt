@@ -1,7 +1,7 @@
-package me.rogerroca.vialmentorapp.data.room
+package me.rogerroca.vialmentorapp.data.local.room
 
-import me.rogerroca.vialmentorapp.data.room.dao.ConversationDao
-import me.rogerroca.vialmentorapp.data.room.entity.ConversationEntity
+import me.rogerroca.vialmentorapp.data.local.room.dao.ConversationDao
+import me.rogerroca.vialmentorapp.data.local.room.entity.ConversationEntity
 import me.rogerroca.vialmentorapp.model.entity.Conversation
 import me.rogerroca.vialmentorapp.model.repository.IConversationRepository
 
