@@ -12,11 +12,13 @@ import me.rogerroca.vialmentorapp.model.entity.Identifier
 import me.rogerroca.vialmentorapp.model.entity.Message
 import me.rogerroca.vialmentorapp.model.entity.MessageState
 import me.rogerroca.vialmentorapp.model.entity.MessageType
+import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
+import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 import java.time.Instant
 
 class ConversationViewModel(
-    private val messagesRepo: MessagesRepositoryImpl,
-    private val conversationsRepo: ConversationsRepositoryImpl,
+    private val messagesRepo: MessagesRepository,
+    private val conversationsRepo: ConversationsRepository,
     private val conversationId: Int
 ) : ViewModel() {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
