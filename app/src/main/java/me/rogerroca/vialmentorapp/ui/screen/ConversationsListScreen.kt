@@ -21,6 +21,14 @@ fun ConversationsListScreen(
 ) {
     val conversations by viewModel.conversations.collectAsState()
     val createdConversationId by viewModel.createdConversation.collectAsState()
+
+    LaunchedEffect(createdConversationId) {
+        createdConversationId?.let { id ->
+            navController.navigate("conversation/$id")
+            viewModel.clearCreatedConversationId()
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -28,18 +36,13 @@ fun ConversationsListScreen(
                     viewModel.newConversation("Test nueva conversación")
                 }
             ) {
-                LaunchedEffect(createdConversationId) {
-                    createdConversationId?.let { id ->
-                        navController.navigate("conversation/$id")
-                    }
-                }
+                // TODO: Add icon here
             }
         },
         modifier = modifier
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
             items(conversations.size) {
                 val conversation = conversations[it]

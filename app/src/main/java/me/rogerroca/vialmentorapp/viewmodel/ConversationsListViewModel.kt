@@ -39,4 +39,8 @@ class ConversationsListViewModel(
             _createdConversation.value = id
         }
     }
+
+    fun clearCreatedConversationId() {
+        _createdConversation.value = null
+    }
 }
