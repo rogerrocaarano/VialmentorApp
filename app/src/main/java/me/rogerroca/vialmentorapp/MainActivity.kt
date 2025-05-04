@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import me.rogerroca.vialmentorapp.data.remote.firebase.AuthManager
 import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
 import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 import me.rogerroca.vialmentorapp.ui.screen.ConversationScreen
@@ -21,19 +22,24 @@ import me.rogerroca.vialmentorapp.viewmodel.ConversationsListViewModel
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
     private lateinit var permissionManager: PermissionManager
 
     // Koin magic
     private val conversationsRepository by inject<ConversationsRepository>()
     private val messagesRepository by inject<MessagesRepository>()
+    private val authManager by inject<AuthManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        auth = FirebaseAuth.getInstance()
-        signInAnonymously()
+        authManager.signInAnonymously { success, uid ->
+            if (success) {
+                Log.d("MainActivity", "Signed in as: $uid")
+            } else {
+                Log.e("MainActivity", "Authentication failed")
+            }
+        }
 
         permissionManager = PermissionManager(this)
         permissionManager.requestPermission()
@@ -72,19 +78,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private fun signInAnonymously() {
-        auth.signInAnonymously()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign-in success
-                    val user = auth.currentUser
-                    Log.d("MainActivity", "Signed in as: ${user?.uid}")
-                } else {
-                    // Sign-in failed
-                    Log.e("MainActivity", "Authentication failed", task.exception)
-                }
-            }
     }
 }
