@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import me.rogerroca.vialmentorapp.data.local.room.AppDb
-import me.rogerroca.vialmentorapp.data.local.room.LocalConversationRepository
-import me.rogerroca.vialmentorapp.data.local.room.LocalMessageRepository
+import me.rogerroca.vialmentorapp.data.local.room.ConversationsRepositoryImpl
+import me.rogerroca.vialmentorapp.data.local.room.MessagesRepositoryImpl
 import me.rogerroca.vialmentorapp.ui.screen.ConversationScreen
 import me.rogerroca.vialmentorapp.ui.screen.ConversationsListScreen
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme
@@ -20,8 +20,8 @@ fun MyApp(activity: MainActivity) {
     val database = AppDb.getDatabase(activity)
     val messageDao = database.messageDao()
     val conversationDao = database.conversationDao()
-    val localMessageRepository = LocalMessageRepository(messageDao)
-    val localConversationRepository = LocalConversationRepository(conversationDao)
+    val messagesRepositoryImpl = MessagesRepositoryImpl(messageDao)
+    val conversationsRepositoryImpl = ConversationsRepositoryImpl(conversationDao)
     val navController = rememberNavController()
 
     VialmentorAppTheme {
@@ -32,7 +32,7 @@ fun MyApp(activity: MainActivity) {
 
             composable("conversationsList") {
                 ConversationsListScreen(
-                    ConversationsListViewModel(localConversationRepository),
+                    ConversationsListViewModel(conversationsRepositoryImpl),
                     navController = navController,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -44,8 +44,8 @@ fun MyApp(activity: MainActivity) {
                 require(conversationId is Int)
                 ConversationScreen(
                     ConversationViewModel(
-                        localMessageRepository,
-                        localConversationRepository,
+                        messagesRepositoryImpl,
+                        conversationsRepositoryImpl,
                         conversationId
                     ),
                     conversationId = conversationId,

@@ -6,9 +6,9 @@ import me.rogerroca.vialmentorapp.model.entity.Identifier
 import me.rogerroca.vialmentorapp.model.entity.Message
 import me.rogerroca.vialmentorapp.model.entity.MessageState
 import me.rogerroca.vialmentorapp.model.entity.MessageType
-import me.rogerroca.vialmentorapp.model.repository.IMessageRepository
+import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 
-class LocalMessageRepository(private val messageDao: MessageDao) : IMessageRepository {
+class MessagesRepositoryImpl(private val messageDao: MessageDao) : MessagesRepository {
 
     override suspend fun getMessages(conversation: Identifier): List<Message> {
         require(conversation is Identifier.IntId)

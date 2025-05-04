@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import me.rogerroca.vialmentorapp.data.local.room.LocalConversationRepository
-import me.rogerroca.vialmentorapp.data.local.room.LocalMessageRepository
+import me.rogerroca.vialmentorapp.data.local.room.ConversationsRepositoryImpl
+import me.rogerroca.vialmentorapp.data.local.room.MessagesRepositoryImpl
 import me.rogerroca.vialmentorapp.model.entity.Conversation
 import me.rogerroca.vialmentorapp.model.entity.Identifier
 import me.rogerroca.vialmentorapp.model.entity.Message
@@ -15,8 +15,8 @@ import me.rogerroca.vialmentorapp.model.entity.MessageType
 import java.time.Instant
 
 class ConversationViewModel(
-    private val messagesRepo: LocalMessageRepository,
-    private val conversationsRepo: LocalConversationRepository,
+    private val messagesRepo: MessagesRepositoryImpl,
+    private val conversationsRepo: ConversationsRepositoryImpl,
     private val conversationId: Int
 ) : ViewModel() {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())

@@ -3,10 +3,10 @@ package me.rogerroca.vialmentorapp.data.local.room
 import me.rogerroca.vialmentorapp.data.local.room.dao.ConversationDao
 import me.rogerroca.vialmentorapp.data.local.room.entity.ConversationEntity
 import me.rogerroca.vialmentorapp.model.entity.Conversation
-import me.rogerroca.vialmentorapp.model.repository.IConversationRepository
+import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
 
-class LocalConversationRepository(private val conversationDao: ConversationDao) :
-    IConversationRepository {
+class ConversationsRepositoryImpl(private val conversationDao: ConversationDao) :
+    ConversationsRepository {
     override suspend fun getConversations(): List<Conversation> {
         try {
             val entity = conversationDao.getConversations()

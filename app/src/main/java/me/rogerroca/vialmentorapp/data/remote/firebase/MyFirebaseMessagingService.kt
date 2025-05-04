@@ -1,14 +1,14 @@
 package me.rogerroca.vialmentorapp.data.remote.firebase
 
 import android.app.NotificationManager
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import me.rogerroca.vialmentorapp.R
 
-class NotificationService : FirebaseMessagingService() {
-    private val TAG = "NotificationService"
+class MyFirebaseMessagingService : FirebaseMessagingService() {
     /**
      * Called if the FCM registration token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the
