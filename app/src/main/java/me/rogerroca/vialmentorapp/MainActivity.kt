@@ -5,29 +5,32 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
 import me.rogerroca.vialmentorapp.data.remote.firebase.AuthManager
 import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
 import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 import me.rogerroca.vialmentorapp.ui.screen.ConversationScreen
 import me.rogerroca.vialmentorapp.ui.screen.ConversationsListScreen
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme
+import me.rogerroca.vialmentorapp.util.PermissionManager
 import me.rogerroca.vialmentorapp.viewmodel.ConversationViewModel
 import me.rogerroca.vialmentorapp.viewmodel.ConversationsListViewModel
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    private lateinit var permissionManager: PermissionManager
-
-    // Koin magic
     private val conversationsRepository by inject<ConversationsRepository>()
     private val messagesRepository by inject<MessagesRepository>()
     private val authManager by inject<AuthManager>()
+    private val permissionManager by inject<PermissionManager>()
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            permissionManager.onPermissionResult(isGranted)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +44,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        permissionManager = PermissionManager(this)
-        permissionManager.requestPermission()
+        // Inyectado y con launcher registrado
+        permissionManager.registerLauncher(requestPermissionLauncher)
+        permissionManager.requestNotificationPermission(this)
 
         setContent {
             val navController = rememberNavController()
