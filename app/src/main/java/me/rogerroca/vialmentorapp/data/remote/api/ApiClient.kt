@@ -1,12 +1,15 @@
 package me.rogerroca.vialmentorapp.data.remote.api
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -43,9 +46,19 @@ class ApiClient {
         return response.body()
     }
 
+    suspend fun registerFirebaseUserId(jwtToken: String): String {
+        val url = "$API_BASE_URL$API_PATH_REGISTER_FIREBASE_USER"
+        Log.d("ApiClient", "Requesting URL: $url")
+        val response = client.get(url) {
+            header("Authorization", "Bearer $jwtToken")
+        }
+        return response.body()
+    }
+
     companion object {
-        private const val API_BASE_URL = "https://api.vialmentor.rogerroca.me"
+        private const val API_BASE_URL = "https://vialmentor-api.rogerroca.me"
         private const val API_PATH_SEND_MESSAGE = "/ChatAgent/send-message"
+        private const val API_PATH_REGISTER_FIREBASE_USER = "/UserRegistration/register-firebase-user"
     }
 }
 
