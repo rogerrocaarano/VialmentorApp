@@ -1,0 +1,12 @@
+package me.rogerroca.vialmentorapp.di
+
+import me.rogerroca.vialmentorapp.data.local.room.ConversationsRepositoryImpl
+import me.rogerroca.vialmentorapp.data.local.room.MessagesRepositoryImpl
+import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
+import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
+import org.koin.dsl.module
+
+val repositoryModule = module {
+    single<ConversationsRepository> { ConversationsRepositoryImpl(get()) }
+    single<MessagesRepository> { MessagesRepositoryImpl(get()) }
+}
