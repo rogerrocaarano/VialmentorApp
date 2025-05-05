@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import me.rogerroca.vialmentorapp.ui.component.ConversationListItem
+import me.rogerroca.vialmentorapp.ui.navigation.Routes
 import me.rogerroca.vialmentorapp.viewmodel.ConversationsListViewModel
 
 @Composable
@@ -24,7 +25,7 @@ fun ConversationsListScreen(
 
     LaunchedEffect(createdConversationId) {
         createdConversationId?.let { id ->
-            navController.navigate("conversation/$id")
+            navController.navigate(Routes.goToConversation(id))
             viewModel.clearCreatedConversationId()
         }
     }
@@ -40,6 +41,7 @@ fun ConversationsListScreen(
             }
         },
         modifier = modifier
+
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding)
@@ -50,7 +52,7 @@ fun ConversationsListScreen(
                     title = conversation.heading,
                     lastMessageDateTime = conversation.updatedAt.toString(),
                     onclick = {
-                        navController.navigate("conversation/${conversation.id}")
+                        navController.navigate(Routes.goToConversation(conversation.id))
                     }
                 )
             }
