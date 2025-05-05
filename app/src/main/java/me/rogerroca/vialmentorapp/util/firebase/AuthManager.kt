@@ -16,4 +16,21 @@ class AuthManager {
                 }
             }
     }
+
+    fun getIdToken(onResult: (Boolean, String?) -> Unit) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            currentUser.getIdToken(true)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val idToken = task.result?.token
+                        onResult(true, idToken)
+                    } else {
+                        onResult(false, task.exception?.message)
+                    }
+                }
+        } else {
+            onResult(false, "User not authenticated")
+        }
+    }
 }
