@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.compose.rememberNavController
-import me.rogerroca.vialmentorapp.data.remote.firebase.AuthManager
+import me.rogerroca.vialmentorapp.util.firebase.AuthManager
 import me.rogerroca.vialmentorapp.ui.navigation.AppNavHost
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme
 import me.rogerroca.vialmentorapp.util.PermissionManager

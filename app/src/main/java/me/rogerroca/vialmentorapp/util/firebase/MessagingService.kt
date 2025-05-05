@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.remote.firebase
+package me.rogerroca.vialmentorapp.util.firebase
 
 import android.app.NotificationManager
 import android.content.ContentValues.TAG
@@ -8,7 +8,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import me.rogerroca.vialmentorapp.R
 
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+class MessagingService : FirebaseMessagingService() {
     /**
      * Called if the FCM registration token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the

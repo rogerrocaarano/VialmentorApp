@@ -1,4 +1,4 @@
-package me.rogerroca.vialmentorapp.data.remote.firebase
+package me.rogerroca.vialmentorapp.util.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 
