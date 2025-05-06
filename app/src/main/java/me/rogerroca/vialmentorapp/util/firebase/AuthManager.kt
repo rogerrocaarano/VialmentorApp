@@ -1,6 +1,7 @@
 package me.rogerroca.vialmentorapp.util.firebase
 
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class AuthManager {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -31,6 +32,16 @@ class AuthManager {
                 }
         } else {
             onResult(false, "User not authenticated")
+        }
+    }
+
+    suspend fun getJwtToken(): String? = suspendCancellableCoroutine { continuation ->
+        getIdToken { success, token ->
+            if (success) {
+                continuation.resume(token) { cause, _, _ -> null?.let { it(cause) } }
+            } else {
+                continuation.resume(null) { cause, _, _ -> null?.let { it(cause) } }
+            }
         }
     }
 }
