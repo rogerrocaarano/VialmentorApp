@@ -7,6 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import me.rogerroca.vialmentorapp.data.remote.api.ApiClient
 import me.rogerroca.vialmentorapp.util.firebase.AuthManager
 import me.rogerroca.vialmentorapp.ui.navigation.AppNavHost
 import me.rogerroca.vialmentorapp.ui.theme.VialmentorAppTheme
@@ -16,6 +20,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val authManager by inject<AuthManager>()
     private val permissionManager by inject<PermissionManager>()
+    private val apiClient by inject<ApiClient>()
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -38,11 +43,32 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun initAuth() {
-        authManager.signInAnonymously { success, uid ->
-            if (success) {
-                Log.d("MainActivity", "Signed in as: $uid")
-            } else {
-                Log.e("MainActivity", "Authentication failed")
+        authManager.signInAnonymously { isSuccess, uid ->
+            if (!isSuccess) {
+                Log.e("MainActivity", "Failed to sign in anonymously: $uid")
+                return@signInAnonymously
+            }
+
+            Log.d("MainActivity", "Signed in anonymously with UID: $uid")
+            authManager.getIdToken { tokenSuccess, idToken ->
+                if (!tokenSuccess || idToken == null) {
+                    Log.e("MainActivity", "Failed to obtain ID Token")
+                    return@getIdToken
+                }
+
+                Log.d("MainActivity", "Obtained ID Token: $idToken")
+                registerFirebaseUserId(idToken)
+            }
+        }
+    }
+
+    private fun registerFirebaseUserId(idToken: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = apiClient.registerFirebaseUserId(idToken)
+                Log.d("MainActivity", "Firebase ID registered successfully: $response")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error registering Firebase ID: ${e.message}", e)
             }
         }
     }
