@@ -90,4 +90,45 @@ class ConversationViewModel(
             api.addMessageToConversation(it, cloudConversationId, message.text)
         }
     }
+
+    private suspend fun getMessagesIdsFromCloud(): List<String> {
+        waitForCloudId()
+        val jwtToken = authManager.getJwtToken() ?: return emptyList()
+        val conversationCloudId = conversation.value?.cloudId ?: return emptyList()
+        val cloudMessagesIds = api.getMessages(jwtToken, conversationCloudId)
+        return cloudMessagesIds
+    }
+
+    fun pullMessages() {
+        viewModelScope.launch {
+            val cloudMessagesIds = getMessagesIdsFromCloud()
+            val localMessagesCloudIds = messages.value.map { it.cloudId }
+            val newMessagesIds = cloudMessagesIds.filter { it !in localMessagesCloudIds }
+
+            if (newMessagesIds.isNotEmpty()) {
+
+            }
+        }
+    }
+
+    private suspend fun getMessageFromCloud(cloudId: String): Message? {
+        waitForCloudId()
+        val jwtToken = authManager.getJwtToken() ?: return null
+        val conversationCloudId = conversation.value?.cloudId ?: return null
+        val response = api.getMessage(jwtToken, conversationCloudId, cloudId)
+        if (response == null) {
+            return null
+        }
+        val message = Message(
+            cloudId = response.id,
+            type = MessageType.valueOf(response.role),
+            state = when (MessageType.valueOf(response.role)) {
+                MessageType.USER -> MessageState.SENT
+                MessageType.ASSISTANT -> MessageState.RECEIVED
+            },
+            sendAt = Instant.parse(response.createdAt),
+            text = response.text
+        )
+        return message
+    }
 }

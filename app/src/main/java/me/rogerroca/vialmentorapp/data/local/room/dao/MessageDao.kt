@@ -23,4 +23,7 @@ interface MessageDao {
 
     @Query("SELECT * FROM messages WHERE id = :id")
     suspend fun getMessage(id: Int): MessageEntity?
+
+    @Query("SELECT cloudId FROM messages WHERE conversationId = :conversationId")
+    suspend fun getMessagesIdCloudByConversationId(conversationId: Int): List<String>
 }

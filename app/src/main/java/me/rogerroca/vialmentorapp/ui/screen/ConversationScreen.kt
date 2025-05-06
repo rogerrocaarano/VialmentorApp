@@ -43,6 +43,7 @@ fun ConversationScreen(
             ChatInput(CHAT_INPUT_PLACEHOLDER) {
                 if (it.isNotBlank()) {
                     viewModel.addMessage(it)
+//                    viewModel.fetchRemoteMessages()
                 }
             }
         }

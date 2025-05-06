@@ -27,6 +27,14 @@ class MessagesRepositoryImpl(private val messageDao: MessageDao) : MessagesRepos
         }
     }
 
+    override suspend fun getMessagesIdCloudByConversationId(conversationId: Int): List<String> {
+        try {
+            return messageDao.getMessagesIdCloudByConversationId(conversationId)
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
     override suspend fun addMessage(message: Message, conversationId: Int): Int {
         try {
             val entity = MessageEntity(
