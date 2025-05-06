@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { ConversationsListViewModel(get(), get(), get()) }
-    viewModel { (conversationId: Int) -> ConversationViewModel(get(), get(), conversationId) }
+    viewModel { (conversationId: Int) -> ConversationViewModel(get(), get(), get(), get(), conversationId) }
 }
