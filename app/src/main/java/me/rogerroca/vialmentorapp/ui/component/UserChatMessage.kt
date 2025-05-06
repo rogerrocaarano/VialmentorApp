@@ -16,9 +16,9 @@ import me.rogerroca.vialmentorapp.model.entity.MessageState
 @Composable
 fun UserChatMessage(text: String, state: MessageState) {
     val backgroundColor = when (state) {
-        MessageState.SENDING -> Color.Yellow
-        MessageState.SENT -> Color.LightGray
-        else -> Color.LightGray
+        MessageState.SENDING -> MaterialTheme.colorScheme.secondaryContainer
+        MessageState.SENT -> MaterialTheme.colorScheme.primaryContainer
+        else -> MaterialTheme.colorScheme.primaryContainer
     }
     Row(
         modifier = Modifier
