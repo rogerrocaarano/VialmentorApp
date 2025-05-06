@@ -1,6 +1,5 @@
 package me.rogerroca.vialmentorapp.viewmodel
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,14 +7,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import me.rogerroca.vialmentorapp.data.local.room.ConversationsRepositoryImpl
-import me.rogerroca.vialmentorapp.data.local.room.MessagesRepositoryImpl
 import me.rogerroca.vialmentorapp.data.remote.api.ApiClient
-import me.rogerroca.vialmentorapp.model.entity.Conversation
-import me.rogerroca.vialmentorapp.model.entity.Identifier
-import me.rogerroca.vialmentorapp.model.entity.Message
-import me.rogerroca.vialmentorapp.model.entity.MessageState
-import me.rogerroca.vialmentorapp.model.entity.MessageType
+import me.rogerroca.vialmentorapp.model.entity.*
 import me.rogerroca.vialmentorapp.model.repository.ConversationsRepository
 import me.rogerroca.vialmentorapp.model.repository.MessagesRepository
 import me.rogerroca.vialmentorapp.util.firebase.AuthManager
@@ -28,67 +21,73 @@ class ConversationViewModel(
     private val authManager: AuthManager,
     private val conversationId: Int
 ) : ViewModel() {
-    private val _messages = MutableStateFlow<List<Message>>(emptyList())
-    val messages: StateFlow<List<Message>> = _messages
 
-    private val _conversation = MutableStateFlow<Conversation?>(null)
-    val conversation: StateFlow<Conversation?> = _conversation
-
-
-    init {
-        updateConversation()
-        updateMessages()
+    companion object {
+        private const val TAG = "ConversationViewModel"
     }
 
-    fun updateConversation() {
+    private val _messages = MutableStateFlow<List<Message>>(emptyList())
+    val messages: StateFlow<List<Message>> get() = _messages
+
+    private val _conversation = MutableStateFlow<Conversation?>(null)
+    val conversation: StateFlow<Conversation?> get() = _conversation
+
+    init {
+        refreshConversation()
+        refreshMessages()
+    }
+
+    fun refreshMessages() {
+        viewModelScope.launch {
+            _messages.value = messagesRepo.getMessages(conversationId)
+        }
+    }
+
+    private fun refreshConversation() {
         viewModelScope.launch {
             _conversation.value = conversationsRepo.getConversation(conversationId)
         }
     }
 
-    fun updateMessages() {
-        viewModelScope.launch {
-            val fetchedMessages = messagesRepo.getMessages(conversationId)
-            _messages.value = fetchedMessages
-        }
-    }
-
     fun addMessage(userInput: String) {
-        val message = Message(
+        val newMessage = Message(
             text = userInput,
             sendAt = Instant.now(),
             type = MessageType.USER,
             state = MessageState.SENDING
         )
+
         viewModelScope.launch {
-            val messageId = messagesRepo.addMessage(message, conversationId)
-            updateMessages()
-            while (conversation.value?.cloudId?.isBlank()!!) {
-                Log.d(TAG, "Waiting for cloud ID to be set")
-                delay(1000)
-                updateConversation()
-            }
-            val cloudId = sendMessage(message)
-            val success = cloudId?.let {
-                messagesRepo.setCloudId(messageId, it)
-            }
-            if (success == true) {
+            val localId = messagesRepo.addMessage(newMessage, conversationId)
+            refreshMessages()
+
+            waitForCloudId()
+
+            val cloudId = sendMessageToCloud(newMessage)
+            if (cloudId != null && messagesRepo.setCloudId(localId, cloudId)) {
                 Log.d(TAG, "Message sent with cloud ID: $cloudId")
-                updateMessages()
             } else {
-                Log.e(TAG, "Failed to set cloud ID for message")
+                Log.e(TAG, "Failed to send message or set cloud ID")
             }
+
+            refreshMessages()
         }
     }
 
-    private suspend fun sendMessage(message: Message): String? {
+    private suspend fun waitForCloudId() {
+        while (conversation.value?.cloudId.isNullOrBlank()) {
+            Log.d(TAG, "Waiting for cloud ID...")
+            delay(1000)
+            refreshConversation()
+        }
+    }
+
+    private suspend fun sendMessageToCloud(message: Message): String? {
         val jwtToken = authManager.getJwtToken()
-        val conversationId = conversation.value?.cloudId
-        requireNotNull(conversationId)
-        return if (jwtToken != null) {
-            api.addMessageToConversation(jwtToken, conversationId, message.text)
-        } else {
-            null
+        val cloudConversationId = conversation.value?.cloudId ?: return null
+
+        return jwtToken?.let {
+            api.addMessageToConversation(it, cloudConversationId, message.text)
         }
     }
 }
