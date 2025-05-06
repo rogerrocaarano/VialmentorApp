@@ -9,5 +9,5 @@ data class GetMessageResponse(
     val conversationId: String,
     val text: String,
     val role: String,
-    val createdAt: Date
+    val createdAt: String
 )
