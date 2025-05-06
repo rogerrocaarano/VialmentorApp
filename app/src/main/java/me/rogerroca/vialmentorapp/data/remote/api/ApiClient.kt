@@ -66,7 +66,7 @@ class ApiClient {
             setBody(mapOf("content" to content))
         }
         val responseDto = response.body<AddMessageToConversationResponse>()
-        return responseDto.conversationId
+        return responseDto.messageId
     }
 
     companion object {
