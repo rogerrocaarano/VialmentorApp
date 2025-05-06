@@ -58,4 +58,31 @@ class ConversationsRepositoryImpl(private val conversationDao: ConversationDao) 
         }
     }
 
+    override suspend fun setConversationCloudId(id: Int, cloudId: String): Boolean {
+        try {
+            val storedEntity = conversationDao.getConversation(id)
+            if (storedEntity != null) {
+                val updatedEntity = storedEntity.copy(cloudId = cloudId)
+                conversationDao.updateConversation(updatedEntity)
+                return true
+            }
+            return false
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    override suspend fun setConversationHeading(id: Int, heading: String): Boolean {
+        try {
+            val storedEntity = conversationDao.getConversation(id)
+            if (storedEntity != null) {
+                val updatedEntity = storedEntity.copy(heading = heading)
+                conversationDao.updateConversation(updatedEntity)
+                return true
+            }
+            return false
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
 }
